@@ -1,0 +1,100 @@
+# logic
+
+At beginning, first eagle will wake mom to prepare food,
+and then wait for food ready, the second eagle will stay
+until first eagle take the food.
+
+For second and later round, if there is eagle find food
+is empty, it will wait until no eagle is eating and then
+wake up mother eagle, and after this, all eagle which want
+to eat food will wait for food ready also wait first eagle
+take the food, for later round, repeat this routine until
+mother eagle retire.
+
+# work
+
+Use sufficient semophore, and one counter for food,
+especially prepare a semophore to protect the food counter,
+and another protect baby eagle which is taking the food.
+
+# Question 1
+
+At any time, if counter is equal to 0 means there is no food,
+the first eagle which see the food is empty will lock the
+semophore (waiting_eagle_can_eat_mutex), and wake up mother
+eagle to prepare food, no more than m baby eagles can eating
+due to the food counter would not be negative.
+
+# Question 2
+
+If baby eagle want to eat, it will first see if there is any
+feeding pot is filled, if there is not(or maybe all pot is
+take by others eagle), it will wait until all eagle finish
+the food and wake up mom eagle. Using pot_count_mutex can
+know the current free pot number, and no_eagle_eating_mutex
+is used to wait no eagle is eating, finally, use wake_mutex
+(Signal) to wake up mom, and use food_ready_mutex wait food
+prepared.
+
+# Question 3
+
+Using pot_count_mutex can know the current free pot number,
+if there is more than 0, take out the pot and minus the
+count 1, finally unlock the pot_count_mutex, at any time,
+no more than one eagle can manipulate the pot number, since
+pot_count_mutex is initialized to 1.
+
+# Question 4
+
+If there is a baby eagle want to eat food, it will first
+lock the pot_count_mutex and see if there is any pot filled
+(using pot_count <- protected by pot_count_mutex), if there
+is no filled pot, it will wait no eagle eating and wake up
+mother eagle.
+
+# Question 5
+
+If a baby eagle find a filled feeding pot, it will take out
+the feeding pot (pot_count--), there is no more than one
+baby eagle can do this, since pot_count is protected by the
+pot_count_mutex. There is no more than one baby eagle can
+take out same feeding pot.
+
+# Question 6
+
+If a baby eagle find all feeding pot is empty, it will wake
+up mother eagle, no else baby eagle can do this since the
+first eagle will lock waiting_eagle_can_eat_mutex until food
+prepared and taked the food.
+
+# Question 7
+
+Mother eagle will take a nap, and use wake_mutex to wait
+any baby eagle wake her up.
+
+# Question 8
+
+Mother eagle only can be waked while she is taking a nap
+(wake_mutex).
+
+# Question 9
+
+Before feeding pots are all filled, baby eagle which want
+to eat will wait the first eagle which see the feeding pot
+is empty and wake mother up, first eagle will wait mother
+eagle prepare food use food_ready_mutex, mother eagle will
+inform the first eagle can eat after all feeding pots is
+filled.
+
+# Question 10
+
+After feeding pots are all filled, mom eagle will Signal the
+food_ready_mutex to let the baby eagle which wake her up can
+eat, then all baby eagle can eat since the first eagle has
+taken the food and release the waiting_eagle_can_eat_mutex.
+
+# Question 11
+
+At the final round, let mom eagle take a nap until all baby
+eagle finish the food and wake her up, after this, mom eagle
+can retire and there will no baby eagle is eating.

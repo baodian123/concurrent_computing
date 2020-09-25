@@ -1,0 +1,68 @@
+# Question 1
+
+    main    for loop index 1
+   /    \
+parent  child   for loop index 2
+        /    \
+    parent   child  for loop index 3
+            /     \
+        parent    child
+
+Create 3 processes.
+Main program fork first child process,
+and parent execute break then print its process and parent id,
+child process continue to run the for loop and fork again,
+first child process execute break and print process and parent id,
+the child of first child process will run the for loop with index 3,
+then, it fork final child process, and it print its process and parent id,
+and final child process will also print its process and parent id.
+
+# Question 2
+
+                main        for loop index 0
+              /      \
+            parent  child   for loop index 1
+           /      \
+        parent   child      for loop index 2
+       /      \
+    parent   child          for loop index 3
+   /      \
+parent   child
+
+Create 4 processes.
+Main program fork the first child,
+then the first child execute break and print its process and parent id,
+main program continue the for loop with index 1, and fork second child,
+then second child also execute break and print the info,
+main program still continue the for loop with index 2,
+fork the third child, and child still break and print the info,
+main program continue the for loop with index 3, fork the fourth child,
+both main program and fourth child execute break and print their info.
+
+# Question 3
+
+                            main
+                   /                   \
+                parent                 child
+            /           \          /            \
+        parent        child       parent        child
+        /     \      /     \      /     \      /     \
+    parent child parent child parent child parent child
+
+Create 7 processes.
+Main program fork first child,
+then both of them continue the for loop with index 1,
+(assume we fork the process successfully)
+then parent(main program) and its child fork,
+then we will get two parent and two child,
+(a parent is main program, a child is the first child process)
+then all of them fork, finally we get four parent and four child,
+one of the parent is the main program, left 7 processes.
+
+# Question 4
+
+It is called "binomial distribution".
+The pinball will go left or right with both 50 percentage,
+no matter the order, we only focus on the result,
+(ex: left->left->right is equal to left->right->left)
+it is same as the calculation of binomial distribution process. 

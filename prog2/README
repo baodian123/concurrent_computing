@@ -1,0 +1,79 @@
+# Question 1
+
+First, main process read the data from input file,
+and open a shared memory space for these data,
+then fork a child to execute merge.c and wait for it.
+merge.c will receive the shared memory space key and other info,
+including left and right index, partition, and either first time or not,
+and begin to do the merge sort.
+
+For merge.c, if left plus right equal to 1,
+meaning that it is the last partition and can do the swap,
+else merge.c will fork two child and both execute merge.c,
+with new parameter for these two process.
+
+After done the swap function, parent process will fork child process 
+to run binary merge, in this case, modify binary search to reach the 
+goal as requirement says. After done the merge stage, write the result 
+back(not the shared memory create from main, but parent create),
+then bottom-up write back until the process which fork from main,
+finally write the result back to the shared memory create from main.
+
+# Question 2
+
+Make sure do not change the value by two process in the same time,
+and create shared memory using unique key to avoid create fail.
+It should work because there is no uncertain factor.
+
+# Question 3
+
+There are two types of shared memory.
+
+shared memory create from main, shared memory create from merge.c.
+For shared memory create from main, just for merge.c to read,
+and store the final result.
+
+For shared memory create from merge.c, there is two different types,
+one is for store the result from two child process, another one is 
+for temporarily store the sorted array, and it will write back to 
+the first one shared memory.
+
+| main shared memory | -> | merge shared memory |  <----
+                            /                 \        |
+                        child p1            child p2   |
+                            \                 /        |
+                          temporarily shared memory ---|
+
+# Question 4
+
+No, using the temporarily shared memory can avoid race condition,
+this can prevent changing the value simultaneously. For split stage,
+it will not attach the same segment of the shared memory.
+
+# Question 5
+
+it may affect others process, because it may change the origin 
+value before another process read it.
+
+For example, we have an array contain four integer 4 7 3 9.
+then we may run processes to find out the position of 4 and 7
+in final array, 4 will be index 1 and 7 will be index 2.
+If we run the process for 7 first, it change origin array's 
+index 2, the value 3 will be change to 7, but next we do the 
+process for 4, we will find that 4 is smaller than 7 and its 
+index in final array will be 0, it depend on the execution order.
+
+# Question 6
+
+Before the merge stage start, it will create a shared memory with  
+size left minus right, this shared memory is for store the result 
+from child processes(merge), for everytime in recursion, always 
+allocate temporary array with size left minus right, storing the 
+result back and remove it after all merge stage complete.
+
+# Question 7
+
+Create n processes and use busy waiting to wait other processes.
+For example, we need to sort 4 7 2 9, while we done the process 4,
+we need to wait process 7, process 2, and process 9 done. After 
+this, we can do the next stage.

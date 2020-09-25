@@ -1,0 +1,63 @@
+# logic
+
+At beginning, start the master thread, and master will
+create a neighbor thread and let it memorized two, and
+index one, then send the number from 3 to the input number
+(default is 30) to the created thread, the thread will
+check if it can divide the receives number by it memorized
+number, if yes it will ignore the number, if not, it will
+pass this number to it neighbor thread, and if there is
+no neighbor thread, it will create a neighbor thread and
+let it own the number. All thread using the index to
+construct the channel between its neighbor, index start
+from 0(master thread), and 1 for master thread neighbor,
+and so on.
+
+# work
+
+Using index to let the channel work properly, and determine
+whether the number should be pass to neighbor or not, and
+check if the neighbor is existed or not first, finally,
+exit after join the neighbor thread exited.
+
+# variable meaning
+
+index: the indentical number of thread to construct the channel
+number(PrimeThread): the owned number of PrimeThread
+number(MasterThread): input number from command line argument
+                      (default is 30)
+prime array: array to store the prime number
+             (all initial to 0)
+Mutex m: to lock the stdout
+
+# Question 1
+
+Yes, the sender can always pass the message, and
+those messages which have not been received will
+stay in a message queue(FIFO) and wait until the receiver
+read it. And if receiver found that the message
+queue is empty, it will wait until the message
+send by the sender.
+
+# Question 2
+
+Because the input is increase, thread will always receive
+number large than its owned one. And if the last thread
+receive the number and it can not divide, the number must
+be a prime number, since the number can not divide by the
+previous threads.
+
+# Question 3
+
+Initial all the prime array elements to 0, when
+the thread want to store the number in prime array,
+using while loop to find the first 0 of array
+element, then store the number in there.
+
+# Question 4
+
+When thread is created, it will save the number
+into prime array, it will occur when a thread is
+creating, and at any time, there is at least one
+thread is creating, so there is no need a mutex
+to protect the prime array.

@@ -1,0 +1,32 @@
+# Question 1
+
+There is no race condition, since that we do not modify
+the origin array directly, we read the input data and
+write the result to other array instead.
+
+# Question 2
+
+For the first gap, x[n] will plus x[n-1], the second gap,
+x[n] will plus x[n-2], but now the x[n-2] is actually x[n-2]+x[n-3],
+for x[n], every gap will plus 2^(i) number for i equal to 0 to log2(n)-1,
+
+gap1: x[n] + x[n-1]
+gap2: x[n] + x[n-2] + x[n-3]
+gap3: x[n] + x[n-4] + x[n-5] + x[n-6] + x[n-7]  ...
+
+I think it's a little bit like a top-down divide-and-conquer solution.
+
+# Question 3
+
+We can not write the result x[i]+x[i-2^h-1] back to x[i]
+directly, since that we may need to calculate x[j]+x[j-2^(h-1)]
+where j-2^(h-1) equal to i, if we write the result back directly,
+x[j] will read the x[i] which have been changed, then we will
+get wrong result of x[j]+x[j-2^(h-1)].
+
+# Question 4
+
+We may need to create a temp array with equivalent size of input array,
+then we create n thread, and save the result back to this temp array,
+and before switch to the next gap, use busy waiting to wait the others
+thread done instead of using thread.join().

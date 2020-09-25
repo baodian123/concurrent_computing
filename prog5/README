@@ -1,0 +1,80 @@
+# logic
+
+For everyone who arrive the river side, he/she will
+watch if there is a safe composition of boat load,
+and if boat is ready, if there is, the composition
+will be take on board, and if there is not, he/she
+will wait at the river side, until someone sees a
+safe composition of boat load, or the boat is ready
+at river side and sees there is a safe composition,
+boat will also take them on board.
+
+# work
+
+Either passenger or boat will check if there is a
+safe composition of boat load, so that there is
+always someone check that if there is a safe composition
+of boat load, hence the boat can run continuously.
+
+# variable meaning
+
+lock_stdout: lock the standard out
+m_count: the number of missionary (should be 0 in initial)
+c_count: the number of cannibal (should be 0 in initial)
+Condition c: let cannibal wait at river side
+Condition m: let missionary wait at river side
+Condition left: passenger left the boat
+Condition boat_start: boat left river side and start to row
+load: record the passenger id
+type: record the passenger type
+seat: the remaining seat of boat (should be 0 in initial)
+round: the number of boat load round (should be 1 in initial)
+is_boat_ready: whether the boat is ready for the next round or not
+tid(cannibal, missionary): their identical number
+
+# boat load
+
+If there is a safe composition of boat load, who sees this
+composition will signal the condition variable boat_start
+to tell boat start, and boat will see the composition and
+let the passenger of this composition get on boat by signal
+the condition variable c or m exactly three times.
+
+# policy
+
+For cannibal who arrives the river side:
+Seeing that there are two missionaris or two cannibals
+will form a safe composition of boat load.
+
+For missionary who arrives the river side:
+Seeing that there are two missionaris or one missionary
+and one cannibal will form a safe composition of boat load.
+
+# Question 1
+
+Before crossing complete, all passenger will wait the
+condition variable: left, until boat done, boat will
+signal condition variable: left to let the passenger
+get off the boat.
+
+# Question 2
+
+Same as question 1, use the condition variable: left
+to guarantee that no one can jump off the boat while
+the boat is crossing the river.
+
+# Question 3
+
+After the composition is decided, boat will let the
+passenger of this composition get on the boat, by
+this time, passenger will regist their type and id
+to record who is get on the boat, cannibal and
+missionary who doesn't pick by boat will be lock
+at the river side by condition variable: c or m.
+
+# Question 4
+
+Passenger who is on river crossing will wait until
+the boat done and tell them they can leave by using
+condition variable: left, after this, passenger still
+can arrive at river side again.
